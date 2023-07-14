@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Password Checker</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <style>
+        .task {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .task h3 {
+            margin-right: 10px;
+        }
+
+        .output {
+            margin-left: 10px;
+            padding: 5px;
+            border: 1px solid black;
+            color: white;
+        }
+
+        .correct {
+            background-color: green;
+        }
+
+        .incorrect {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="task">
+    <h3>Kolik je 1000 + 200 + 30 + 4:</h3>
+    <input type="text" id="task1" oninput="checkPassword('task1', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'output1', 'U2FsdGVkX18RnXvmD/RMbCUoRq/bQmdSQhfpa+jZX2xrJ3C7mmTJdLxmh//ob4Zk')" placeholder="Napiš odpověď">
+    <p id="output1" class="output incorrect">Abys získal heslo, vlož odpověď.</p>
+</div>
+<div class="task">
+    <h3>Heslo je lokomotiva, ale i LoKomoTIVa, i LOKOMOTIVA, děláme .toLower()</h3>
+    <input type="text" id="task2" oninput="checkPassword('task2', '4ae186c43d9738d3ec0f2e212ea23b68b8ec7f7a3b2152effa008ac5316fddee', 'output2', 'U2FsdGVkX18r/CIKz+BdWjGMd2ZiS0sPCGz7cOsxGZqUT5tFO4fqGuW3DvA/ZKY/MlmBmen+nSLwawCoWN+Fmg==')" placeholder="Napiš odpověď">
+    <p id="output2" class="output incorrect">Abys získal heslo, vlož odpověď.</p>
+</div>
+<!--<div class="task">-->
+<!--    <h3>Pokus ukázka jak přidat další</h3>-->
+<!--    <input type="text" id="task3" oninput="checkPassword('task3', 'SemPatříHASH', 'output3', 'SemPatříEncryptedSecretKey')" placeholder="Napiš odpověď">-->
+<!--    <p id="output3" class="output incorrect">Abys získal heslo, vlož odpověď.</p>-->
+<!--</div>-->
+<script>
+    function checkPassword(taskId, hashedPassword, outputId, encryptedSecretKey) {
+        const taskInput = document.querySelector(`#${taskId}`).value.toLowerCase();
+        const hashedInput = sha256(taskInput);
+        const output = document.querySelector(`#${outputId}`);
+
+        if (hashedInput === hashedPassword) {
+            const decrypted = CryptoJS.AES.decrypt(encryptedSecretKey, taskInput).toString(CryptoJS.enc.Utf8);
+            output.innerText = `${decrypted}`;
+            output.className = 'output correct';
+        } else {
+            output.innerText = `Bohužel, "${taskInput}" není správně.`;
+            output.className = 'output incorrect';
+        }
+    }
+</script>
+</body>
+</html>

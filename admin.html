@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Password and Secret Key Helper</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <style>
+        .task {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .task h3 {
+            margin-right: 10px;
+        }
+
+        .output {
+            margin-left: 10px;
+            padding: 5px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<div class="task">
+    <h3>Password:</h3>
+    <input type="text" id="password" placeholder="Enter password">
+</div>
+<div class="task">
+    <h3>Secret Key:</h3>
+    <input type="text" id="secretKey" placeholder="Enter secret key">
+</div>
+<button onclick="generateHashAndCipher()">Generate Hash and Cipher</button>
+<div class="task">
+    <h3>Password Hash:</h3>
+    <p id="passwordHash" class="output">-</p>
+</div>
+<div class="task">
+    <h3>Encrypted Secret Key:</h3>
+    <p id="encryptedKey" class="output">-</p>
+</div>
+<script>
+    function generateHashAndCipher() {
+        const password = document.querySelector("#password").value.toLowerCase();
+        const secretKey = document.querySelector("#secretKey").value;
+
+        const hashedPassword = sha256(password);
+        const encryptedKey = CryptoJS.AES.encrypt(secretKey, password).toString();
+
+        document.querySelector("#passwordHash").innerText = hashedPassword;
+        document.querySelector("#encryptedKey").innerText = encryptedKey;
+    }
+</script>
+</body>
+</html>
