@@ -54,8 +54,11 @@
     <p id="output4" class="output incorrect">Abys zjistil kam dál, vlož odpověď.</p>
 </div>
 <script>
+    function removeDiacritics(str) {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
     function checkPassword(taskId, hashedPassword, outputId, encryptedSecretKey) {
-        const taskInput = document.querySelector(`#${taskId}`).value.toLowerCase();
+        const taskInput = removeDiacritics(document.querySelector(`#${taskId}`).value.toLowerCase());
         const hashedInput = sha256(taskInput);
         const output = document.querySelector(`#${outputId}`);
 

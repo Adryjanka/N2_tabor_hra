@@ -42,8 +42,11 @@
     <p id="encryptedKey" class="output">-</p>
 </div>
 <script>
+    function removeDiacritics(str) {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
     function generateHashAndCipher() {
-        const password = document.querySelector("#password").value.toLowerCase();
+        const password = removeDiacritics(document.querySelector("#password").value.toLowerCase());
         const secretKey = document.querySelector("#secretKey").value;
 
         const hashedPassword = sha256(password);
